@@ -15,7 +15,7 @@ sudo dnf up -y
 echo "*************************************************************************************************" 
 
 echo "*** INSTALL SOME UTILITYS ***"
-sudo dnf install gnome-tweaks htop inxi powertop vlc neofetch vim gkrellm snapd vim -y
+sudo dnf install gnome-tweaks htop inxi powertop neofetch vim gkrellm snapd -y
 
 echo "*************************************************************************************************"
 
@@ -36,7 +36,7 @@ flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flat
 echo "*************************************************************************************************"
 
 echo "*** INSTALL FLATPAKS ***"
-flatpak install com.brave.Browser com.getpostman.Postman com.github.micahflee.torbrowser-launcher com.google.Chrome com.microsoft.Teams com.spotify.Client com.sublimetext.three com.visualstudio.code com.ylsoftware.qmmp.Qmmp io.github.mimbrero.WhatsAppDesktop org.eclipse.Java org.qbittorrent.qBittorrent us.zoom.Zoom org.freefilesync.FreeFileSync -y
+flatpak install flathub com.brave.Browser com.getpostman.Postman com.github.micahflee.torbrowser-launcher com.google.Chrome com.microsoft.Teams com.spotify.Client com.sublimetext.three com.visualstudio.code com.ylsoftware.qmmp.Qmmp io.github.mimbrero.WhatsAppDesktop org.eclipse.Java org.qbittorrent.qBittorrent us.zoom.Zoom org.freefilesync.FreeFileSync org.videolan.VLC -y
 
 echo "*************************************************************************************************"
 
