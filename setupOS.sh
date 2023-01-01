@@ -23,7 +23,7 @@ echo *** INSTALL FLATPAK REPOSITORY ***
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
 echo *** INSTALL FLATPAKS ***
-flatpak install com.brave.Browser com.getpostman.Postman com.github.micahflee.torbrowser-launcher com.google.Chrome com.microsoft.Teams com.spotify.Client com.sublimetext.three com.visualstudio.code com.ylsoftware.qmmp.Qmmp io.github.mimbrero.WhatsAppDesktop org.eclipse.Java org.qbittorrent.qBittorrent us.zoom.Zoom
+flatpak install com.brave.Browser com.getpostman.Postman com.github.micahflee.torbrowser-launcher com.google.Chrome com.microsoft.Teams com.spotify.Client com.sublimetext.three com.visualstudio.code com.ylsoftware.qmmp.Qmmp io.github.mimbrero.WhatsAppDesktop org.eclipse.Java org.qbittorrent.qBittorrent us.zoom.Zoom org.freefilesync.FreeFileSync -y
 
 echo *** INSTALL SNAPD ***
 snap install mysql-workbench-community -y
