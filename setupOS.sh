@@ -31,7 +31,7 @@ sudo dnf groupupdate sound-and-video -y
 echo "*************************************************************************************************"
 
 echo "*** INSTALL FLATPAK REPOSITORY ***"
-flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
 echo "*************************************************************************************************"
 
@@ -40,11 +40,5 @@ flatpak install flathub com.brave.Browser com.getpostman.Postman com.github.mica
 
 echo "*************************************************************************************************"
 
-echo "*** INSTALL SNAPD ***"
-snap install mysql-workbench-community -y
-
 echo "*** CREATE sda1 sda2 DIRECTORYS in /mnt ***"
 sudo mkdir /mnt/sda{1,2}
-
-
-
