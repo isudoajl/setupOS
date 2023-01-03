@@ -15,7 +15,7 @@ sudo dnf up -y
 echo "*************************************************************************************************" 
 
 echo "*** INSTALL SOME UTILITYS ***"
-sudo dnf install gnome-tweaks htop inxi powertop neofetch vim gkrellm snapd -y
+sudo dnf install gnome-tweaks htop inxi powertop neofetch vim gkrellm snapd virtualbox -y
 
 echo "*************************************************************************************************"
 
@@ -42,6 +42,9 @@ echo "**************************************************************************
 
 echo "*** INSTALL SNAPD ***"
 snap install mysql-workbench-community -y
+
+echo "*** CREATE sda1 sda2 DIRECTORYS in /mnt ***"
+sudo mkdir /mnt/sda{1,2}
 
 
 
