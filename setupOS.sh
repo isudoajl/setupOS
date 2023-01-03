@@ -15,7 +15,7 @@ sudo dnf up -y
 echo "*************************************************************************************************" 
 
 echo "*** INSTALL SOME UTILITYS ***"
-sudo dnf install gnome-tweaks htop inxi powertop neofetch vim gkrellm snapd virtualbox -y
+sudo dnf install gnome-tweaks htop inxi powertop neofetch vim gkrellm snapd VirtualBox tlp -y
 
 echo "*************************************************************************************************"
 
