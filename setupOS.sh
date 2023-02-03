@@ -15,7 +15,7 @@ sudo dnf up -y
 echo "*************************************************************************************************" 
 
 echo "*** INSTALL SOME UTILITYS ***"
-sudo dnf install gnome-tweaks htop inxi powertop neofetch vim gkrellm snapd VirtualBox tlp cronie -y
+sudo dnf install gnome-tweaks htop inxi powertop neofetch vim gkrellm snapd tlp cronie -y
 
 echo "*************************************************************************************************"
 
@@ -36,19 +36,19 @@ sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub
 echo "*************************************************************************************************"
 
 echo "*** INSTALL FLATPAKS ***"
-flatpak install flathub com.brave.Browser /
-com.getpostman.Postman /
-com.github.micahflee.torbrowser-launcher com.google.Chrome /
-com.microsoft.Teams /
-com.spotify.Client /
-com.sublimetext.three /
-com.visualstudio.code /
-com.ylsoftware.qmmp.Qmmp /
-io.github.mimbrero.WhatsAppDesktop /
-org.eclipse.Java org.qbittorrent.qBittorrent /
-us.zoom.Zoom /
-org.freefilesync.FreeFileSync /
-org.videolan.VLC /
+flatpak install flathub com.brave.Browser \
+com.getpostman.Postman \
+com.github.micahflee.torbrowser-launcher com.google.Chrome \
+com.microsoft.Teams \
+com.spotify.Client \
+com.sublimetext.three \
+com.visualstudio.code \
+com.ylsoftware.qmmp.Qmmp \
+io.github.mimbrero.WhatsAppDesktop \
+org.eclipse.Java org.qbittorrent.qBittorrent \
+us.zoom.Zoom \
+org.freefilesync.FreeFileSync \
+org.videolan.VLC \
 com.github.PintaProject.Pinta -y
 
 echo "*************************************************************************************************"
