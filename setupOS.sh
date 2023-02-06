@@ -75,6 +75,11 @@ fi
 
 echo "*************************************************************************************************"
 echo "*** INSTALL FLATPAKS ***"
+sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+if [ $? -ne 0 ]; then
+  echo "ERROR: Failed to install Flatpak Repository"
+  exit 1
+fi
 
 FLATPAK_APPS=(
   com.brave.Browser
