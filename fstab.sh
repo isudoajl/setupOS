@@ -24,7 +24,7 @@ if ! echo "UUID=$sda2_uuid /mnt/sda2 ext4 defaults 0 0" | sudo tee -a /etc/fstab
   exit 1
 fi
 
-if ! echo "UUID=$sda2_uuid /mnt/old-sda2 ext4 defaults 0 0" | sudo tee -a /etc/fstab > /dev/null; then
+if ! echo "UUID=$sda3_uuid /mnt/old-sda2 ext4 defaults 0 0" | sudo tee -a /etc/fstab > /dev/null; then
   echo "Error: Failed to add old-sda2 to /etc/fstab"
   exit 1
 fi
