@@ -98,6 +98,7 @@ FLATPAK_APPS=(
   org.freefilesync.FreeFileSync
   org.videolan.VLC
   com.github.PintaProject.Pinta
+  org.flameshot.Flameshot
 )
 
 for app in "${FLATPAK_APPS[@]}"; do
