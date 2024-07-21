@@ -33,7 +33,7 @@ fi
 echo "*************************************************************************************************" 
 
 echo "*** INSTALL SOME UTILITYS ***"
-sudo dnf install gnome-tweaks htop inxi powertop neofetch vim gkrellm snapd tlp cronie libappindicator-gtk3 gnome-shell-extension-appindicator rsyslog fdupes podman-compose setroubleshoot-server -y
+sudo dnf install simplescreenrecorder gnome-tweaks htop inxi powertop neofetch vim gkrellm snapd tlp cronie libappindicator-gtk3 gnome-shell-extension-appindicator rsyslog fdupes podman-compose setroubleshoot-server -y
 if [ $? -ne 0 ]; then
   echo "ERROR: Failed to install utilities."
   exit 1
@@ -51,14 +51,9 @@ fi
 echo "*************************************************************************************************"
 
 echo "*** INSTALL MEDIA CODECS ***"
-sudo dnf groupupdate multimedia --setop="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin -y
+sudo dnf group install Multimedia -y
 if [ $? -ne 0 ]; then
   echo "ERROR: Failed to install multimedia codecs."
-  exit 1
-fi
-sudo dnf groupupdate sound-and-video -y
-if [ $? -ne 0 ]; then
-  echo "ERROR: Failed to update sound-and-video group."
   exit 1
 fi
 
