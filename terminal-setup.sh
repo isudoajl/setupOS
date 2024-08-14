@@ -4,5 +4,7 @@ echo "LS_COLORS='rs=0:di=01;32:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;3
 
 echo "PS1='\[\e]0;\u@\h: \w\a\]\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '" >> ~/.bashrc
 
+echo "neofetch" >> ~/.bashrc
+
 echo "Variables x and y added to .bashrc file."
 

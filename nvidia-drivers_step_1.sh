@@ -20,5 +20,4 @@ for package in $PACKAGES; do
 done
 
 echo "*** ALL PACKAGES INSTALLED SUCCESSFULLY ***"
-
-
+echo "*** WAIT 5-10 MIN FOR THE KERNEL MODULES TO LOAD UP ***"

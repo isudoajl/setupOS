@@ -11,7 +11,7 @@ echo "**************************************************************************
 echo "*** MOUNTING sda1 AND sda2 DEVICES ***"
 
 sda1_uuid="dae51dd4-c895-4730-b153-156b394da23f"
-sda2_uuid="eec760a8-a536-4f5d-9931-c39c6e4dab0c"
+#sda2_uuid="eec760a8-a536-4f5d-9931-c39c6e4dab0c"
 sda3_uuid="8592534b-b3ba-42f7-a344-51b11208ab88"
 
 if ! echo "UUID=$sda1_uuid /mnt/sda1 ext4 defaults 0 0" | sudo tee -a /etc/fstab > /dev/null; then
