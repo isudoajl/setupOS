@@ -32,15 +32,6 @@ fi
 
 echo "*************************************************************************************************" 
 
-echo "*** INSTALL SOME UTILITYS ***"
-sudo dnf install gnome-tweaks htop inxi powertop neofetch vim gkrellm snapd tlp cronie libappindicator-gtk3 gnome-shell-extension-appindicator rsyslog fdupes podman-compose setroubleshoot-server -y
-if [ $? -ne 0 ]; then
-  echo "ERROR: Failed to install utilities."
-  exit 1
-fi
-
-echo "*************************************************************************************************"
-
 echo "*** INSTALL RPM FUSION FEDORA ***"
 sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
 if [ $? -ne 0 ]; then
@@ -62,12 +53,20 @@ echo "**************************************************************************
 echo "*** SETUP \$PS1 VARIABLE ***"
 
 echo "*** SET HOSTNAME NAME ***"
-hostnamectl set-hostname f37-server
+hostnamectl set-hostname workstation
 if [ $? -ne 0 ]; then
   echo "ERROR: Failed to set hostname."
   exit 1
 fi
 
 echo "*************************************************************************************************"
+
+echo "*** SET ROUTER IN /etc/hosts ***"
+
+echo "192.168.1.1 router" | sudo tee -a /etc/hosts
+
+
+
+
 echo "*** END ***"
 
