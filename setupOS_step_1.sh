@@ -53,7 +53,7 @@ echo "**************************************************************************
 echo "*** SETUP \$PS1 VARIABLE ***"
 
 echo "*** SET HOSTNAME NAME ***"
-hostnamectl set-hostname workstation
+hostnamectl set-hostname vm-workstation
 if [ $? -ne 0 ]; then
   echo "ERROR: Failed to set hostname."
   exit 1
