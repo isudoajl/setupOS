@@ -22,8 +22,21 @@ if ! sudo mount /mnt/sda1; then
   echo "Error: Failed to mount sda1"
   exit 1
 fi
-  echo "Error: Failed to reload system daemons"
+
+echo "*** MOUNTING SANDISK_LINUX DIRECTORY ***"
+
+sdl_uuid="9746a48e-c7ac-4d20-8017-214a2ff3535b"
+sd_device="/mnt/Sandisk_Linux"
+
+if ! echo "UUID=$sdl_uuid $sd_device ext4 defaults 0 0" | sudo tee -a /etc/fstab > /dev/null; then
+  echo "Error: Failed to add Sandisk Linux to /etc/fstab"
   exit 1
 fi
 
-echo "Successfully mounted sda1 device"
+if ! sudo mount $sd_device; then
+  echo "Error: Failed to mount Sandisk Linux"
+  exit 1
+fi
+
+echo "Successfully mounted sda1 and Sandisk Linux devices"
+
