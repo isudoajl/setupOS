@@ -27,6 +27,7 @@ FLATPAK_APPS=(
   org.videolan.VLC
   com.github.PintaProject.Pinta
   org.flameshot.Flameshot
+  com.obsproject.Studio
 )
 
 for app in "${FLATPAK_APPS[@]}"; do
