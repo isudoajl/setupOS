@@ -1,0 +1,79 @@
+---
+- name: Install NVIDIA Packages, Verify, Run Post-Installation Tasks, and Configure X11
+  hosts: all
+  become: yes
+  vars:
+    nvidia_packages:
+      - gcc
+      - kernel-headers
+      - kernel-devel
+      - akmod-nvidia
+      - xorg-x11-drv-nvidia
+      - xorg-x11-drv-nvidia-libs
+      - xorg-x11-drv-nvidia-libs.i686
+
+  tasks:
+    - name: Install NVIDIA related packages
+      dnf:
+        name: "{{ nvidia_packages }}"
+        state: present
+      register: install_result
+
+    - name: Fail if package installation fails
+      fail:
+        msg: "ERROR: Failed to install NVIDIA packages."
+      when: install_result.failed
+
+    - name: Check installation status for each package
+      command: dnf list installed "{{ item }}"
+      loop: "{{ nvidia_packages }}"
+      register: pkg_check
+      changed_when: false
+      failed_when: pkg_check.rc != 0
+
+    - name: Confirm all packages installed successfully
+      debug:
+        msg: "ALL PACKAGES INSTALLED SUCCESSFULLY. WAIT 5-10 MINUTES FOR THE KERNEL MODULES TO LOAD UP."
+
+    - name: Wait for 10 minutes before running post-installation tasks
+      pause:
+        seconds: 1
+        prompt: "Waiting 10 minutes before running post-installation tasks..."
+
+    - name: Run akmods with --force option
+      command: akmods --force
+      register: akmods_result
+      failed_when: akmods_result.rc != 0
+
+    - name: Run dracut with --force option
+      command: dracut --force
+      register: dracut_result
+      failed_when: dracut_result.rc != 0
+
+    - name: Create NVIDIA X11 configuration file
+      copy:
+        dest: /etc/X11/xorg.conf.d/nvidia.conf
+        content: |
+          Section "OutputClass"
+                  Identifier "nvidia"
+                  MatchDriver "nvidia-drm"
+                  Driver "nvidia"
+                  Option "AllowEmptyInitialConfiguration"
+                  Option "SLI" "Auto"
+                  Option "BaseMosaic" "on"
+                  Option "PrimaryGPU" "yes"
+          EndSection
+
+          Section "ServerLayout"
+                  Identifier "layout"
+                  Option "AllowNVIDIAGPUScreens"
+                  Option "PrimaryGPU" "yes"
+          EndSection
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Confirm all post-installation tasks completed successfully
+      debug:
+        msg: "Script completed successfully."
+

@@ -1,0 +1,173 @@
+---
+- name: Automate Installation Tasks (Flatpak, OS Utilities, ownCloud, ProtonVPN, TeamViewer)
+  hosts: all
+  become: yes
+  vars:
+    flatpak_apps:
+      - org.flameshot.Flameshot
+      - com.brave.Browser
+      - com.getpostman.Postman
+      - com.github.micahflee.torbrowser-launcher
+      - com.google.Chrome
+      - com.microsoft.Teams
+      - com.spotify.Client
+      - com.sublimetext.three
+      - com.visualstudio.code
+      - com.ylsoftware.qmmp.Qmmp
+      - io.github.mimbrero.WhatsAppDesktop
+      - org.eclipse.Java
+      - org.qbittorrent.qBittorrent
+      - us.zoom.Zoom
+      - org.freefilesync.FreeFileSync
+      - org.videolan.VLC
+      - com.github.PintaProject.Pinta
+      - org.flameshot.Flameshot
+      - com.obsproject.Studio
+      - com.mastermindzh.tidal-hifi
+
+  tasks:
+
+    # -------------------------
+    # Flatpak Apps Section
+    # -------------------------
+    - name: Add Flathub remote if not exists
+      command: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+      register: flatpak_remote
+      changed_when: "'Added' in flatpak_remote.stdout"
+
+    - name: Install Flatpak applications
+      loop: "{{ flatpak_apps }}"
+      command: flatpak install flathub {{ item }} -y
+      register: flatpak_install
+      # Fail if any flatpak installation fails
+      failed_when: flatpak_install.rc != 0
+
+    # -------------------------
+    # OS Utilities Section
+    # -------------------------
+    - name: Install OS utilities
+      dnf:
+        name:
+          - xclip
+          - gnome-tweaks
+          - htop
+          - inxi
+          - powertop
+          - fastfetch
+          - vim
+          - gkrellm
+          - snapd
+          - tlp
+          - cronie
+          - libappindicator-gtk3
+          - gnome-shell-extension-appindicator
+          - rsyslog
+          - fdupes
+          - podman-compose
+          - setroubleshoot-server
+        state: present
+
+    # -------------------------
+    # ownCloud Section (Fedora 39)
+    # -------------------------
+    - name: Check if OS is Fedora 39
+      shell: grep 'Fedora 39' /etc/os-release || true
+      register: fedora39_check
+
+    - name: Prompt if OS is not Fedora 39
+      pause:
+        prompt: "This installation is for Fedora 39. Press CTRL-C to abort or ENTER to continue."
+      when: fedora39_check.stdout == ""
+
+    - name: Ensure dnf config-manager is installed
+      dnf:
+        name: dnf-command(config-manager)
+        state: present
+
+    - name: Import ownCloud GPG key
+      rpm_key:
+        state: present
+        key: sudo rpm --import https://download.owncloud.com/desktop/ownCloud/stable/latest/linux/Fedora_41/repodata/repomd.xml.key
+
+    - name: Add ownCloud repository
+      command: sudo dnf config-manager addrepo --from-repofile=https://download.owncloud.com/desktop/ownCloud/stable/latest/linux/Fedora_41/owncloud-client.repo 
+      register: owncloud_repo
+      failed_when: owncloud_repo.rc != 0
+
+    - name: Clean dnf cache (ownCloud)
+      command: dnf clean all
+
+    - name: Install ownCloud client
+      dnf:
+        name: owncloud-client
+        state: present
+        update_cache: yes
+
+    - name: Upgrade ownCloud client to latest version
+      dnf:
+        name: owncloud-client
+        state: latest
+
+    # -------------------------
+    # ProtonVPN Section
+    # -------------------------
+    - name: Download ProtonVPN repository package
+      get_url:
+        url: "https://repo.protonvpn.com/fedora-{{ ansible_distribution_major_version }}-stable/protonvpn-stable-release/protonvpn-stable-release-1.0.1-2.noarch.rpm"
+        dest: /tmp/protonvpn-stable-release-1.0.1-2.noarch.rpm
+
+    - name: Install ProtonVPN repository package
+      dnf:
+        name: /tmp/protonvpn-stable-release-1.0.1-2.noarch.rpm
+        state: present
+
+    - name: Install ProtonVPN application
+      dnf:
+        name: proton-vpn-gnome-desktop
+        state: present
+        update_cache: yes
+
+    - name: Install GNOME desktop extensions for tray icons (ProtonVPN)
+      dnf:
+        name:
+          - libappindicator-gtk3
+          - gnome-shell-extension-appindicator
+          - gnome-extensions-app
+        state: present
+
+    - name: Remove ProtonVPN repository RPM file
+      file:
+        path: /tmp/protonvpn-stable-release-1.0.1-2.noarch.rpm
+        state: absent
+
+    - name: Check for updates and upgrade system packages (ProtonVPN)
+      command: dnf check-update && dnf upgrade -y
+
+    # -------------------------
+    # TeamViewer Section
+    # -------------------------
+    - name: Download TeamViewer RPM file
+      get_url:
+        url: "https://download.teamviewer.com/download/linux/teamviewer-host.x86_64.rpm"
+        dest: /tmp/teamviewer-host.x86_64.rpm
+
+    - name: Update OS packages (TeamViewer)
+      command: dnf up -y
+
+    - name: Install TeamViewer RPM package
+      dnf:
+        name: /tmp/teamviewer-host.x86_64.rpm
+        state: present
+
+    - name: Remove TeamViewer RPM file
+      file:
+        path: /tmp/teamviewer-host.x86_64.rpm
+        state: absent
+
+    # -------------------------
+    # Final Message
+    # -------------------------
+    - name: All scripts executed
+      debug:
+        msg: "All installation tasks executed successfully."
+

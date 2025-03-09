@@ -1,0 +1,56 @@
+---
+- name: Setup Fedora System
+  hosts: all
+  become: yes
+  vars:
+    # Using the ansible_user variable to reference the current user
+    user: "{{ ansible_user }}"
+  tasks:
+    - name: Add sudoers file for the user
+      copy:
+        dest: "/etc/sudoers.d/{{ user }}"
+        content: "{{ user }} ALL=(ALL) NOPASSWD:ALL"
+        owner: root
+        group: root
+        mode: '0440'
+
+    - name: Setup dnf.conf with custom options
+      blockinfile:
+        path: /etc/dnf/dnf.conf
+        marker: "# {mark} ANSIBLE MANAGED BLOCK - DNF Options"
+        block: |
+          fastestmirror=True
+          max_parallel_downloads=10
+          defaultyes=True
+          keepcache=True
+
+    - name: Clean dnf cache
+      command: dnf clean all
+
+    - name: Update OS packages
+      command: dnf up -y
+
+    - name: Install RPM Fusion Fedora repositories
+      shell: >
+        dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+        https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
+      args:
+        warn: false
+
+    - name: Install multimedia codecs group
+      command: dnf group install multimedia -y
+
+    - name: Set hostname to vm-workstation
+      hostname:
+        name: vm-workstation
+
+    - name: Add router entry to /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        line: "192.168.1.1 router"
+        create: yes
+
+    - name: End message
+      debug:
+        msg: "Successfully completed all tasks!"
+

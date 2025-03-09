@@ -42,7 +42,7 @@ fi
 echo "*************************************************************************************************"
 
 echo "*** INSTALL MEDIA CODECS ***"
-sudo dnf group install Multimedia -y
+sudo dnf group install multimedia -y
 if [ $? -ne 0 ]; then
   echo "ERROR: Failed to install multimedia codecs."
   exit 1
