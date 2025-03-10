@@ -1,0 +1,76 @@
+---
+- name: Install KVM utilities and configure libvirt/polkit
+  hosts: localhost
+  become: yes
+  vars:
+    utilities:
+      - qemu
+      - dhclient
+      - virt-viewer
+      - libvirt
+      - dnsmasq
+      - dmidecode
+      - ebtables
+      - virt-install
+      - virt-manager
+      - bridge-utils
+    polkit_rule: |
+      polkit.addRule(function(action, subject) {
+          if (action.id == "org.libvirt.unix.manage" &&
+              subject.isInGroup("wheel")) {
+                  return polkit.Result.YES;
+          }
+      });
+  tasks:
+    - name: "*** INSTALL KVM UTILITIES ***"
+      debug:
+        msg: "Installing KVM utilities..."
+
+    - name: Install each KVM utility
+      dnf:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ utilities }}"
+
+    - name: "*** ENABLE libvirtd ***"
+      debug:
+        msg: "Enabling and starting libvirtd service..."
+
+    - name: Enable and start libvirtd service
+      service:
+        name: libvirtd
+        enabled: yes
+        state: started
+
+    - name: "*** SETUP PERMISSIONS ***"
+      debug:
+        msg: "Setting up libvirt permissions..."
+
+    - name: Create libvirt configuration directory in user's home
+      file:
+        path: "{{ ansible_env.HOME }}/.config/libvirt"
+        state: directory
+        mode: '0755'
+
+    - name: Copy libvirt configuration file to user's config directory
+      copy:
+        src: /etc/libvirt/libvirt.conf
+        dest: "{{ ansible_env.HOME }}/.config/libvirt/libvirt.conf"
+        remote_src: yes
+        mode: '0644'
+        owner: "{{ ansible_env.USER }}"
+        group: wheel
+
+    - name: "*** ADDING RULES TO polkit ***"
+      debug:
+        msg: "Adding libvirt management rule to polkit..."
+
+    - name: Append polkit rule for libvirt to /etc/polkit-1/rules.d/50-libvirt.rules
+      shell: echo "{{ polkit_rule }}" | tee -a /etc/polkit-1/rules.d/50-libvirt.rules
+      args:
+        executable: /bin/bash
+
+    - name: "*** SETUP COMPLETED SUCCESSFULLY ***"
+      debug:
+        msg: "Setup completed successfully!"
+

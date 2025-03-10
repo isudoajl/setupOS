@@ -1,0 +1,62 @@
+---
+- name: Create directories and update /etc/fstab with backup and mount commands
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Backup /etc/fstab if backup does not exist
+      command: cp /etc/fstab /etc/fstab.BAK
+      args:
+        creates: /etc/fstab.BAK
+
+    - name: "CREATING DIRECTORIES IF NOT EXIST: Ensure /mnt/sda1 exists"
+      file:
+        path: /mnt/sda1
+        state: directory
+        mode: '0755'
+
+    - name: "CREATING DIRECTORIES IF NOT EXIST: Ensure /mnt/Sandisk_Linux exists"
+      file:
+        path: /mnt/Sandisk_Linux
+        state: directory
+        mode: '0755'
+
+    - name: "UPDATING /etc/fstab: Remove old /mnt/sda1 entries"
+      lineinfile:
+        path: /etc/fstab
+        regexp: '.*\/mnt\/sda1.*'
+        state: absent
+
+    - name: "UPDATING /etc/fstab: Remove old /mnt/Sandisk_Linux entries"
+      lineinfile:
+        path: /etc/fstab
+        regexp: '.*\/mnt\/Sandisk_Linux.*'
+        state: absent
+
+    - name: "UPDATING /etc/fstab: Add /mnt/sda1 entry"
+      lineinfile:
+        path: /etc/fstab
+        line: "UUID=e5806df2-8353-4cdb-8ad8-44e0b7524785 /mnt/sda1 ext4 defaults 0 0"
+        insertafter: EOF
+
+    - name: "UPDATING /etc/fstab: Add /mnt/Sandisk_Linux entry"
+      lineinfile:
+        path: /etc/fstab
+        line: "UUID=0477a9bd-609d-495e-bcc8-495073d8981e /mnt/Sandisk_Linux ext4 defaults 0 0"
+        insertafter: EOF
+
+    - name: "RELOADING MOUNT POINTS: Execute mount -a"
+      command: mount -a
+
+    - name: Reload systemd manager configuration
+      command: systemctl daemon-reload
+
+    - name: Mount /mnt/sda1
+      command: mount /mnt/sda1
+
+    - name: Mount /mnt/Sandisk_Linux
+      command: mount /mnt/Sandisk_Linux
+
+    - name: Print success message
+      debug:
+        msg: "Successfully updated /etc/fstab, reloaded daemon, and mounted /mnt/sda1 and /mnt/Sandisk_Linux!"
+

@@ -1,0 +1,19 @@
+---
+- name: Update network connection settings with nmcli
+  hosts: all
+  become: yes
+  vars:
+    network: "lozadaNETwork"
+    ip_address: "192.168.1.66/24"
+    gateway: "192.168.1.1"
+    method: "manual"
+
+  tasks:
+    - name: Modify network connection settings
+      command: >
+        nmcli con mod {{ network }} ipv4.address {{ ip_address }}
+        ipv4.gateway {{ gateway }} ipv4.method {{ method }}
+
+    - name: Restart network connection to apply changes
+      command: nmcli con up {{ network }}
+

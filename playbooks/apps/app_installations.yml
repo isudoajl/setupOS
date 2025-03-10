@@ -84,13 +84,18 @@
         name: dnf-command(config-manager)
         state: present
 
+    - name: Download ownCloud GPG key
+      get_url:
+        url: https://download.owncloud.com/desktop/ownCloud/stable/latest/linux/Fedora_41/repodata/repomd.xml.key
+        dest: /tmp/owncloud-key.gpg
+
     - name: Import ownCloud GPG key
       rpm_key:
         state: present
-        key: sudo rpm --import https://download.owncloud.com/desktop/ownCloud/stable/latest/linux/Fedora_41/repodata/repomd.xml.key
+        key: /tmp/owncloud-key.gpg
 
     - name: Add ownCloud repository
-      command: sudo dnf config-manager addrepo --from-repofile=https://download.owncloud.com/desktop/ownCloud/stable/latest/linux/Fedora_41/owncloud-client.repo 
+      command: sudo dnf config-manager addrepo --from-repofile=https://download.owncloud.com/desktop/ownCloud/stable/latest/linux/Fedora_41/owncloud-client.repo --overwrite 
       register: owncloud_repo
       failed_when: owncloud_repo.rc != 0
 
@@ -108,44 +113,16 @@
         name: owncloud-client
         state: latest
 
-    # -------------------------
-    # ProtonVPN Section
-    # -------------------------
-    - name: Download ProtonVPN repository package
-      get_url:
-        url: "https://repo.protonvpn.com/fedora-{{ ansible_distribution_major_version }}-stable/protonvpn-stable-release/protonvpn-stable-release-1.0.1-2.noarch.rpm"
-        dest: /tmp/protonvpn-stable-release-1.0.1-2.noarch.rpm
-
-    - name: Install ProtonVPN repository package
-      dnf:
-        name: /tmp/protonvpn-stable-release-1.0.1-2.noarch.rpm
-        state: present
-
-    - name: Install ProtonVPN application
-      dnf:
-        name: proton-vpn-gnome-desktop
-        state: present
-        update_cache: yes
-
-    - name: Install GNOME desktop extensions for tray icons (ProtonVPN)
-      dnf:
-        name:
-          - libappindicator-gtk3
-          - gnome-shell-extension-appindicator
-          - gnome-extensions-app
-        state: present
-
-    - name: Remove ProtonVPN repository RPM file
-      file:
-        path: /tmp/protonvpn-stable-release-1.0.1-2.noarch.rpm
-        state: absent
-
-    - name: Check for updates and upgrade system packages (ProtonVPN)
-      command: dnf check-update && dnf upgrade -y
-
-    # -------------------------
+        # -------------------------
     # TeamViewer Section
     # -------------------------
+
+    - name: Import TeamViewer GPG key
+      rpm_key:
+        state: present
+        key: "https://download.teamviewer.com/download/linux/signature/TeamViewer2017.asc"
+      become: yes
+
     - name: Download TeamViewer RPM file
       get_url:
         url: "https://download.teamviewer.com/download/linux/teamviewer-host.x86_64.rpm"
@@ -158,16 +135,10 @@
       dnf:
         name: /tmp/teamviewer-host.x86_64.rpm
         state: present
+        disable_gpg_check: yes  # Ensure GPG check is enabled after importing the key
 
     - name: Remove TeamViewer RPM file
       file:
         path: /tmp/teamviewer-host.x86_64.rpm
         state: absent
-
-    # -------------------------
-    # Final Message
-    # -------------------------
-    - name: All scripts executed
-      debug:
-        msg: "All installation tasks executed successfully."
 

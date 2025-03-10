@@ -1,0 +1,30 @@
+---
+- name: Remove directories and create soft-links
+  hosts: all
+  gather_facts: yes
+  vars:
+    directories:
+      - Documents
+      - Pictures
+      - Music
+      - Videos
+      - Templates
+      - Public
+      - Desktop
+      - Downloads
+
+  tasks:
+    - name: Remove directories from home folder
+      file:
+        path: "{{ ansible_env.HOME }}/{{ item }}"
+        state: absent
+      loop: "{{ directories }}"
+
+    - name: Create soft-links to /mnt/sda1 directory
+      file:
+        src: "/mnt/sda1/{{ ansible_env.USER }}/ownCloud/{{ item }}"
+        dest: "{{ ansible_env.HOME }}/{{ item }}"
+        state: link
+        force: yes
+      loop: "{{ directories }}"
+

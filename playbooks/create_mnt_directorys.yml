@@ -1,0 +1,22 @@
+---
+- name: Create directories under /mnt and set ownership
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Create directories and set ownership for isudoajl
+      file:
+        path: "/mnt/{{ item }}"
+        state: directory
+        owner: isudoajl
+        group: isudoajl
+        mode: '0755'
+      loop:
+        - Element
+        - MyPassport
+        - Sandisk_Linux
+        - sda1
+
+    - name: Display completion message
+      debug:
+        msg: "Directories created and ownership set."
+

@@ -1,0 +1,23 @@
+---
+- name: Mask services and enable TLP
+  hosts: all
+  become: yes
+  tasks:
+    - name: Mask power-profiles-daemon.service
+      command: systemctl mask power-profiles-daemon.service
+
+    - name: Mask systemd-rfkill.service
+      command: systemctl mask systemd-rfkill.service
+
+    - name: Mask systemd-rfkill.socket
+      command: systemctl mask systemd-rfkill.socket
+
+    - name: Enable and start tlp.service
+      systemd:
+        name: tlp.service
+        enabled: yes
+        state: started
+
+    - name: Start TLP manually
+      command: tlp start
+

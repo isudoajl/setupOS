@@ -1,0 +1,28 @@
+---
+- name: Setup daily update cron job
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: "Create /etc/cron.daily/update file with shebang and update command"
+      copy:
+        dest: /etc/cron.daily/update
+        content: |
+          #!/bin/bash
+          sudo dnf up -y
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: "Verify that /etc/cron.daily/update exists with correct permissions"
+      stat:
+        path: /etc/cron.daily/update
+      register: cron_update_stat
+
+    - name: "Assert file existence and permissions are correct"
+      assert:
+        that:
+          - cron_update_stat.stat.exists
+          - (cron_update_stat.stat.mode | int(base=8)) == 0755
+        success_msg: "The file /etc/cron.daily/update was created with the correct permissions."
+        fail_msg: "There was an error creating the file or setting the permissions."
+

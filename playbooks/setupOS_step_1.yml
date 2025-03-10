@@ -3,8 +3,7 @@
   hosts: all
   become: yes
   vars:
-    # Using the ansible_user variable to reference the current user
-    user: "{{ ansible_user }}"
+    user: "isudoajl"
   tasks:
     - name: Add sudoers file for the user
       copy:
@@ -34,8 +33,6 @@
       shell: >
         dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
         https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
-      args:
-        warn: false
 
     - name: Install multimedia codecs group
       command: dnf group install multimedia -y
