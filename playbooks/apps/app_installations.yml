@@ -8,7 +8,6 @@
       - com.brave.Browser
       - com.getpostman.Postman
       - com.github.micahflee.torbrowser-launcher
-      - com.google.Chrome
       - com.microsoft.Teams
       - com.spotify.Client
       - com.sublimetext.three
@@ -78,6 +77,7 @@
           - cronie
           - libappindicator-gtk3
           - gnome-shell-extension-appindicator
+          - google-chrome-stable
           - rsyslog
           - fdupes
           - podman-compose

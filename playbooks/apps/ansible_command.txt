@@ -1,2 +1,2 @@
-ansible-playbook -i localhost, playbook.yml --connection=local
+ansible-playbook -i localhost, app_installations.yml --connection=local
 
