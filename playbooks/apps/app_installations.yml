@@ -1,5 +1,5 @@
 ---
-- name: Automate Installation Tasks (Flatpak, OS Utilities, ownCloud, ProtonVPN, TeamViewer)
+- name: Automate Installation Tasks (System Update, Ansible, Flatpak, OS Utilities, ownCloud, ProtonVPN, TeamViewer)
   hosts: all
   become: yes
   vars:
@@ -26,6 +26,24 @@
       - com.mastermindzh.tidal-hifi
 
   tasks:
+    # -------------------------
+    # System Update
+    # -------------------------
+    - name: Update all system packages
+      dnf:
+        name: "*"
+        state: latest
+        update_cache: yes
+
+    # -------------------------
+    # Install Ansible
+    # -------------------------
+    - name: Install Ansible and dependencies
+      dnf:
+        name:
+          - ansible-core
+          - ansible
+        state: present
 
     # -------------------------
     # Flatpak Apps Section
@@ -39,7 +57,6 @@
       loop: "{{ flatpak_apps }}"
       command: flatpak install flathub {{ item }} -y
       register: flatpak_install
-      # Fail if any flatpak installation fails
       failed_when: flatpak_install.rc != 0
 
     # -------------------------
@@ -68,17 +85,8 @@
         state: present
 
     # -------------------------
-    # ownCloud Section (Fedora 39)
+    # ownCloud Section
     # -------------------------
-    - name: Check if OS is Fedora 39
-      shell: grep 'Fedora 39' /etc/os-release || true
-      register: fedora39_check
-
-    - name: Prompt if OS is not Fedora 39
-      pause:
-        prompt: "This installation is for Fedora 39. Press CTRL-C to abort or ENTER to continue."
-      when: fedora39_check.stdout == ""
-
     - name: Ensure dnf config-manager is installed
       dnf:
         name: dnf-command(config-manager)
@@ -95,7 +103,7 @@
         key: /tmp/owncloud-key.gpg
 
     - name: Add ownCloud repository
-      command: sudo dnf config-manager addrepo --from-repofile=https://download.owncloud.com/desktop/ownCloud/stable/latest/linux/Fedora_41/owncloud-client.repo --overwrite 
+      command: dnf config-manager addrepo --from-repofile=https://download.owncloud.com/desktop/ownCloud/stable/latest/linux/Fedora_41/owncloud-client.repo --overwrite
       register: owncloud_repo
       failed_when: owncloud_repo.rc != 0
 
@@ -113,15 +121,13 @@
         name: owncloud-client
         state: latest
 
-        # -------------------------
+    # -------------------------
     # TeamViewer Section
     # -------------------------
-
     - name: Import TeamViewer GPG key
       rpm_key:
         state: present
         key: "https://download.teamviewer.com/download/linux/signature/TeamViewer2017.asc"
-      become: yes
 
     - name: Download TeamViewer RPM file
       get_url:
