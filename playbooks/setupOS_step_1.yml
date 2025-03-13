@@ -37,7 +37,7 @@
     - name: Install multimedia codecs group
       command: dnf group install multimedia -y
 
-    - name: Set hostname to vm-workstation
+    - name: Set hostname to workstation
       hostname:
         name: vm-workstation
 
