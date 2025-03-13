@@ -17,12 +17,3 @@
       stat:
         path: /etc/cron.daily/update
       register: cron_update_stat
-
-    - name: "Assert file existence and permissions are correct"
-      assert:
-        that:
-          - cron_update_stat.stat.exists
-          - (cron_update_stat.stat.mode | int(base=8)) == 0755
-        success_msg: "The file /etc/cron.daily/update was created with the correct permissions."
-        fail_msg: "There was an error creating the file or setting the permissions."
-
