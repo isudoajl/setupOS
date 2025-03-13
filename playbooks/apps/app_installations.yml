@@ -106,9 +106,8 @@
         key: /tmp/owncloud-key.gpg
 
     - name: Add ownCloud repository
-      command: sudo dnf config-manager --add-repo=https://download.owncloud.com/desktop/ownCloud/stable/latest/linux/Fedora_40/owncloud-client.repo
+      command: dnf config-manager addrepo --from-repofile=https://download.owncloud.com/desktop/ownCloud/stable/latest/linux/Fedora_41/owncloud-client.repo --overwrite
       register: owncloud_repo
-      failed_when: owncloud_repo.rc != 0
       become: true
 
     - name: Clean dnf cache (ownCloud)
