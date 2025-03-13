@@ -20,7 +20,6 @@
       - org.freefilesync.FreeFileSync
       - org.videolan.VLC
       - com.github.PintaProject.Pinta
-      - org.flameshot.Flameshot
       - com.obsproject.Studio
       - com.mastermindzh.tidal-hifi
 
@@ -82,6 +81,8 @@
           - fdupes
           - podman-compose
           - setroubleshoot-server
+          - strace
+          - flameshot
         state: present
 
     # -------------------------
