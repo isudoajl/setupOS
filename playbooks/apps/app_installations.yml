@@ -9,7 +9,6 @@
       - com.getpostman.Postman
       - com.github.micahflee.torbrowser-launcher
       - com.microsoft.Teams
-      - com.spotify.Client
       - com.sublimetext.three
       - com.visualstudio.code
       - com.ylsoftware.qmmp.Qmmp
@@ -83,6 +82,9 @@
           - setroubleshoot-server
           - strace
           - flameshot
+          - libappindicator-gtk3 
+          - gnome-shell-extension-appindicator
+          - gnome-extensions-app
         state: present
 
     # -------------------------
