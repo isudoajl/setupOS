@@ -39,7 +39,7 @@
 
     - name: Set hostname to workstation
       hostname:
-        name: vm-workstation
+        name: workstation
 
     - name: Add router entry to /etc/hosts
       lineinfile:
