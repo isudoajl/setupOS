@@ -1,0 +1,27 @@
+---
+- name: Update SSH configuration and restart SSHD
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Ensure SSH port and password authentication settings
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?\s*Port\s+\d+'
+        line: 'Port 50789'
+        state: present
+        backup: yes
+
+    - name: Ensure PasswordAuthentication setting
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?\s*PasswordAuthentication\s+\w+'
+        line: 'PasswordAuthentication no'
+        state: present
+        backup: yes
+
+    - name: Restart SSH service
+      ansible.builtin.systemd:
+        name: sshd
+        state: restarted
+
