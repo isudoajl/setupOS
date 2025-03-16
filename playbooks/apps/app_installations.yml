@@ -4,7 +4,6 @@
   become: yes
   vars:
     flatpak_apps:
-      - org.flameshot.Flameshot
       - com.brave.Browser
       - com.getpostman.Postman
       - com.github.micahflee.torbrowser-launcher
