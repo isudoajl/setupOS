@@ -76,3 +76,17 @@
       debug:
         msg: "Setup completed successfully!"
 
+    - name: Remove existing /var/lib/libvirt/images directory
+      ansible.builtin.file:
+        path: /var/lib/libvirt/images
+        state: absent
+      become_method: sudo
+
+    - name: Create symbolic link to new location
+      ansible.builtin.file:
+        src: /mnt/Sandisk_Linux/isudoajl/VM/KVM
+        dest: /var/lib/libvirt/images
+        state: link
+        force: yes
+      become_method: sudo
+

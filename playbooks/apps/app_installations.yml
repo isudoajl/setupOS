@@ -7,14 +7,11 @@
       - com.brave.Browser
       - com.getpostman.Postman
       - com.github.micahflee.torbrowser-launcher
-      - com.microsoft.Teams
-      - com.sublimetext.three
       - com.visualstudio.code
       - com.ylsoftware.qmmp.Qmmp
       - io.github.mimbrero.WhatsAppDesktop
       - org.eclipse.Java
       - org.qbittorrent.qBittorrent
-      - us.zoom.Zoom
       - org.freefilesync.FreeFileSync
       - org.videolan.VLC
       - com.github.PintaProject.Pinta
@@ -30,16 +27,6 @@
         name: "*"
         state: latest
         update_cache: yes
-
-    # -------------------------
-    # Install Ansible
-    # -------------------------
-    - name: Install Ansible and dependencies
-      dnf:
-        name:
-          - ansible-core
-          - ansible
-        state: present
 
     # -------------------------
     # Flatpak Apps Section
@@ -72,8 +59,6 @@
           - snapd
           - tlp
           - cronie
-          - libappindicator-gtk3
-          - gnome-shell-extension-appindicator
           - google-chrome-stable
           - rsyslog
           - fdupes
@@ -96,7 +81,7 @@
 
     - name: Download ownCloud GPG key
       get_url:
-        url: https://download.owncloud.com/desktop/ownCloud/stable/latest/linux/Fedora_41/repodata/repomd.xml.key
+        url: https://download.owncloud.com/desktop/ownCloud/stable/latest/linux/Fedora_40/repodata/repomd.xml.key
         dest: /tmp/owncloud-key.gpg
 
     - name: Import ownCloud GPG key
@@ -105,7 +90,7 @@
         key: /tmp/owncloud-key.gpg
 
     - name: Add ownCloud repository
-      command: dnf config-manager addrepo --from-repofile=https://download.owncloud.com/desktop/ownCloud/stable/latest/linux/Fedora_41/owncloud-client.repo --overwrite
+      command: sudo dnf config-manager --add-repo https://download.owncloud.com/desktop/ownCloud/stable/latest/linux/Fedora_40/owncloud-client.repo 
       register: owncloud_repo
       become: true
 
